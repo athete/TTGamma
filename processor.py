@@ -65,7 +65,7 @@ def select_electrons(events):
         & np.invert(eleSelectTight)
     )
 
-    return events[eleSelectTight], events[eleSelectLoose]
+    return events.Electron[eleSelectTight], events.Electron[eleSelectLoose]
 
 def select_photons(photons):
     """Select tight and loose photons
