@@ -71,7 +71,7 @@ def select_electrons(events):
     elePassDZ = (abs(events.Electron.eta) < 1.479) & (abs(events.Electron.dz) < 0.1) | (abs(events.Electron.eta) > 1.479) & (abs(events.Electron.dz) < 0.2)
 
     eleSelectTight = (
-        (events.Electron.pt > 34) &
+        (events.Electron.pt >= 35) &
         (events.Electron.cutBased > 0) & 
         ((eleEtaGap) & (elePassDXY) & (elePassDZ))
     )
@@ -193,7 +193,7 @@ def generator_overlap_removal(events, ptCut, etaCut, deltaRCut):
         ((events.GenPart.status == 1) | (events.GenPart.status == 71)) & 
         (events.GenPart.pt > 0.001) & 
         ~(
-            (abs(events.GenPart.pdgId) == 12) | 
+            (abs(events.GenPart.pdgId) == 12) | # neutrinos
             (abs(events.GenPart.pdgId) == 14) | 
             (abs(events.GenPart.pdgId) == 16)
         ) & 
@@ -513,7 +513,7 @@ class TTGammaProcessor(processor.ProcessorABC):
         # Find all possible combinations of 3 tight jets in the events
         # Hint: using the ak.combinations(array,n) method chooses n unique items from array.
         # More hints are in the twiki
-        triJet = ak.combinations(events.Jet, n=3, fields=["first", "second", "third"])
+        triJet = ak.combinations(tightJet, n=3, fields=["first", "second", "third"])
         # Sum together jets from the triJet object and find its pt and mass
         triJetPt = (triJet.first + triJet.second + triJet.third).pt
         triJetMass = (triJet.first + triJet.second + triJet.third).mass
